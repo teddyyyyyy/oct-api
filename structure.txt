@@ -1,0 +1,19 @@
+oct-api/
+  app/
+    main.py
+    schemas.py
+    config.py
+    inference/
+      model.py
+      preprocess.py
+    llm/
+      report.py
+    monitoring/
+      metrics.py
+      drift.py
+  weights/
+    convnext.pth
+  Dockerfile
+  docker-compose.yml
+  requirements.txt
+  .dockerignore

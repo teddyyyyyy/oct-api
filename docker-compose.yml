@@ -1,0 +1,11 @@
+services:
+  oct-api:
+    build: .
+    container_name: oct-api
+    ports:
+      - "8000:8000"
+    environment:
+      OCT_WEIGHTS_PATH: /app/weights/best_convnext_model_clean.pth
+      OCT_ARCH: convnext_tiny
+      OCT_DEVICE: cpu
+    restart: unless-stopped

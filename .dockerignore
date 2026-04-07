@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.git/
+.venv/
+venv/
+.env
+tests/
+test_image.jpg
+structure.txt
+README.md
