@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT AI Ophthalmology Diagnostic System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 OCT AI Ophthalmology Diagnostic System</h1>
+            <p>Upload OCT images for automatic diagnosis</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div id="dropZone" class="drop-zone">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p>Drag and drop images or click to upload</p>
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+                <button id="uploadBtn" class="upload-btn" disabled>Start Diagnosis</button>
+            </div>
+
+            <!-- Preview Section -->
+            <div id="preview" class="preview-section" style="display:none;">
+                <h3>Image Preview</h3>
+                <img id="previewImage" alt="Preview">
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="results-section" style="display:none;">
+                <h3>Diagnostic Results</h3>
+
+                <!-- Prediction Results -->
+                <div class="prediction-box">
+                    <h4>🎯 Prediction Results</h4>
+                    <p><strong>Diagnosis Category：</strong> <span id="predLabel">-</span></p>
+                    <div id="probsChart" class="probs-chart"></div>
+                </div>
+
+                <!-- Medical Report -->
+                <div class="report-box">
+                    <h4>📋 Medical Report</h4>
+                    <pre id="reportText"></pre>
+                </div>
+
+                <!-- Data Drift -->
+                <div id="driftBox" class="drift-box" style="display:none;">
+                    <h4>⚠️ Data Drift Alert</h4>
+                    <p id="driftAlert"></p>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="metrics-box">
+                    <h4>⏱️ Performance Metrics</h4>
+                    <p>Diagnostic Time：<span id="latency">-</span> seconds</p>
+                </div>
+            </div>
+
+            <!-- Loading Animation -->
+            <div id="loadingSpinner" class="spinner" style="display:none;">
+                <div class="spin"></div>
+                <p>Processing...</p>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorBox" class="error-box" style="display:none;">
+                <p id="errorText"></p>
+            </div>
+        </main>
+
+        <footer>
+            <p>⚕️ Disclaimer: This system is for research and auxiliary diagnosis purposes only and cannot replace professional medical advice</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
