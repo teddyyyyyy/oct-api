@@ -61,18 +61,18 @@ OCT_DEVICE=cpu
 
 ## API Usage
 Image Classification
-```json
+```bash
 curl -X POST "http://localhost:8000/predict" \
   -F "file=@/path/to/image.jpg"
 ```
 Response Example:
-```bash
+```json
 {
   "prediction": "healthy",
   "confidence": 0.95,
   "timestamp": "2026-04-08T10:30:45Z"
 }
-```
+
 
 ## Testing 
 Run All Tests
