@@ -34,4 +34,132 @@ cd ~/teddy/oct_api
 # 3. Start API service
 OCT_WEIGHTS_PATH=weights/best_convnext_model_clean.pth \
 uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+After startup, access:
+
+- Web UI: http://localhost:8000
+- API Documentation: http://localhost:8000/docs (Swagger UI)
+- Metrics: http://localhost:8000/metrics (Prometheus)
+
+### Method 2: Docker Setup
+```bash
+docker-compose up
+```
+
+Configuration
+```bash
+# Model weights path (required)
+OCT_WEIGHTS_PATH=weights/best_convnext_model_clean.pth
+
+# Model architecture (optional, default: convnext_tiny)
+OCT_ARCH=convnext_tiny
+
+# Compute device (optional, default: cpu, options: cuda)
+OCT_DEVICE=cpu
+```
+
+### API Usage
+Image Classification
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -F "file=@/path/to/image.jpg"
+```
+Respone Example:
+```bash
+{
+  "prediction": "healthy",
+  "confidence": 0.95,
+  "timestamp": "2026-04-08T10:30:45Z"
+}
+```
+
+### Testing 
+Run All Tests
+```bash
+conda run -n oct_api pthon -m -pytest -q
+```
+
+### Run Specific Tests
+```bash
+# Unit tests
+conda run -n oct_api python -m pytest tests/test_report.py -v
+
+# Integration tests
+conda run -n oct_api python -m pytest tests/test_integration.py -v
+
+# Drift detection tests
+conda run -n oct_api python -m pytest tests/test_drift.py -v
+```
+
+### Project Structure
+```bash
+oct_api/
+├── app/                    # FastAPI application
+│   ├── main.py            # Application entry point, API routes
+│   ├── config.py          # Configuration management
+│   ├── schemas.py         # Request/response data models
+│   ├── inference/         # Inference module
+│   │   ├── model.py      # Model loading and inference
+│   │   └── preprocess.py # Image preprocessing
+│   └── static/            # Frontend assets
+│       ├── index.html    # Web UI
+│       ├── script.js     # Interactive logic
+│       └── style.css     # Styling
+├── llm/                   # Report and monitoring module
+│   ├── report.py         # Report generation
+│   └── monitoring/       # Monitoring and drift detection
+│       ├── metrics.py   # Performance metrics collection
+│       └── drift.py     # Data drift detection
+├── scripts/              # Utility scripts
+│   └── generate_ref_stats.py  # Generate reference statistics
+├── tests/               # Test cases
+│   ├── conftest.py     # Pytest configuration
+│   ├── test_integration.py
+│   ├── test_drift.py
+│   └── test_report.py
+├── weights/             # Pre-trained model weights
+│   └── best_convnext_model_clean.pth
+├── requirements.txt     # Python dependencies
+├── docker-compose.yml  # Docker configuration
+├── Dockerfile          # Docker image definition
+└── README.md           # This file
+```
+
+### Dependency Installation
+If the conda env hasn't been created yet:
+```bash
+# Create new environment
+conda create -n oct_api python=3.10
+
+# Activate environment
+conda activate oct_api
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install PyTorch (CPU version)
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# Or install CUDA version (CUDA 11.8)
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+```
+
+### Development
+
+Code Style
+Follow PEP 8 standards. Recommended tools: black and pylint.
+
+Run Development Server
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Troubleshooting
+| Issue                     | Solution                                                                 |
+|--------------------------|--------------------------------------------------------------------------|
+| Model weights not found  | Check `OCT_WEIGHTS_PATH` environment variable is set correctly          |
+| CUDA out of memory       | Set `OCT_DEVICE` to `cpu` or reduce batch size                          |
+| Slow inference           | Ensure GPU is used (if available), check system resources               |
+| API connection failed    | Verify service is running, check firewall and port 8000                 |
 
