@@ -48,7 +48,7 @@ docker-compose up
 ```
 
 ## Configuration
-```bash
+```python
 # Model weights path (required)
 OCT_WEIGHTS_PATH=weights/best_convnext_model_clean.pth
 
