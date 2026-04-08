@@ -47,7 +47,7 @@ After startup, access:
 docker-compose up
 ```
 
-Configuration
+## Configuration
 ```bash
 # Model weights path (required)
 OCT_WEIGHTS_PATH=weights/best_convnext_model_clean.pth
@@ -77,7 +77,7 @@ Respone Example:
 ## Testing 
 Run All Tests
 ```bash
-conda run -n oct_api pthon -m -pytest -q
+conda run -n oct_api python -m -pytest -q
 ```
 
 ## Run Specific Tests
