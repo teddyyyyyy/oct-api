@@ -59,7 +59,7 @@ OCT_ARCH=convnext_tiny
 OCT_DEVICE=cpu
 ```
 
-### API Usage
+## API Usage
 Image Classification
 ```bash
 curl -X POST "http://localhost:8000/predict" \
@@ -74,13 +74,13 @@ Respone Example:
 }
 ```
 
-### Testing 
+## Testing 
 Run All Tests
 ```bash
 conda run -n oct_api pthon -m -pytest -q
 ```
 
-### Run Specific Tests
+## Run Specific Tests
 ```bash
 # Unit tests
 conda run -n oct_api python -m pytest tests/test_report.py -v
@@ -92,7 +92,7 @@ conda run -n oct_api python -m pytest tests/test_integration.py -v
 conda run -n oct_api python -m pytest tests/test_drift.py -v
 ```
 
-### Project Structure
+## Project Structure
 ```bash
 oct_api/
 ├── app/                    # FastAPI application
@@ -126,7 +126,7 @@ oct_api/
 └── README.md           # This file
 ```
 
-### Dependency Installation
+## Dependency Installation
 If the conda env hasn't been created yet:
 ```bash
 # Create new environment
@@ -145,7 +145,7 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 ```
 
-### Development
+## Development
 
 Code Style
 Follow PEP 8 standards. Recommended tools: black and pylint.
@@ -155,7 +155,7 @@ Run Development Server
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Troubleshooting
+## Troubleshooting
 | Issue                     | Solution                                                                 |
 |--------------------------|--------------------------------------------------------------------------|
 | Model weights not found  | Check `OCT_WEIGHTS_PATH` environment variable is set correctly          |
