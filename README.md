@@ -76,6 +76,7 @@ This system is designed as a modular ML pipeline:
 ---
 
 ## 🏗️ Project Structure
+```
 oct_api/
 ├── app/                    # FastAPI application
 │   ├── main.py            # API entry point
@@ -88,14 +89,14 @@ oct_api/
 ├── llm/                   # LLM + monitoring
 │   ├── report.py          # Report generation
 │   └── monitoring/
-│       ├── metrics.py
-│       └── drift.py
+│       ├── metrics.py     # Performance metrics
+│       └── drift.py       # Data drift detection
 ├── tests/                 # Test suite
 ├── weights/               # Model weights
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
-
+```
 ---
 
 ## ⚡ Quick Start
