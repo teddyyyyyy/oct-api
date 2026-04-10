@@ -1,165 +1,160 @@
 # OCT Classification API
 
-An automated Optical Coherence Tomography (OCT) image classification system using ConvNeXt deep learning model. Provides REST API and Web UI with real-time inference, performance monitoring, and data drift detection.
+An end-to-end Medical AI system for Optical Coherence Tomography (OCT) image classification, integrating deep learning inference, LLM-powered report generation, and real-time monitoring in a production-ready pipeline.
 
-## Features
+This project demonstrates how to design and deploy a robust machine learning system with drift awareness, API serving, and fallback-safe inference reporting.
 
-- 🔬 **Deep Learning Inference** - OCT image classification using ConvNeXt model
-- 🌐 **REST API** - FastAPI framework supporting image upload and predictions
-- 📊 **Prometheus Monitoring** - Real-time performance metrics and inference statistics
-- 🔍 **Drift Detection** - Monitor input data distribution changes
-- 📈 **Report Generation** - Automated inference result reports
-- 🎨 **Web UI** - Interactive frontend interface
+---
 
-## System Requirements
+## 🚀 Features
 
-- Python 3.8+
-- CUDA 11.8+ (optional, for GPU acceleration)
-- 4GB+ RAM (8GB+ recommended)
-- 2GB+ available disk space
+- 🔬 **Deep Learning Inference**  
+  OCT image classification using ConvNeXt architecture (PyTorch)
 
-## Quick Start
+- 🌐 **REST API (FastAPI)**  
+  Production-ready inference API with Swagger documentation
 
-### Method 1: Local Setup (Recommended)
+- 🤖 **LLM Report Generation**  
+  Automated medical-style report generation using LLM (Ollama)
 
-**Prerequisites**: [Miniconda](https://docs.conda.io/en/latest/miniconda.html) installed
+- ⚠️ **Fallback Mechanism (Critical Feature)**  
+  Ensures system reliability when LLM is unavailable (rule-based fallback)
+
+- 📊 **Prometheus Monitoring**  
+  Real-time tracking of inference requests, latency, and system health
+
+- 🔍 **Data Drift Detection**  
+  Monitors input data distribution shifts for deployment safety
+
+- 🎨 **Web UI Interface**  
+  Interactive frontend for image upload and prediction visualization
+
+---
+
+## 🧠 System Architecture
+
+This system is designed as a modular ML pipeline:
+
+- **Model Layer**  
+  ConvNeXt-based classifier for OCT image prediction
+
+- **API Layer**  
+  FastAPI service for handling inference requests
+
+- **LLM Layer**  
+  Report generation module with fallback-safe logic
+
+- **Monitoring Layer**  
+  Prometheus metrics + drift detection for observability
+
+- **Frontend Layer**  
+  Lightweight web interface for user interaction
+
+---
+
+## 📊 Model Performance
+
+- Internal Validation (OCT2017):  
+  **AUROC > 0.99**
+
+- External Validation (Leakage-Controlled Dataset):  
+  **Macro-F1 ≈ 0.93**
+
+- Demonstrates realistic generalization under distribution shift
+
+---
+
+## ⚙️ Tech Stack
+
+- **Deep Learning**: PyTorch, timm (ConvNeXt)
+- **Backend**: FastAPI, Uvicorn
+- **Monitoring**: Prometheus
+- **LLM**: Ollama (with fallback system)
+- **Deployment**: Docker, Docker Compose
+- **Frontend**: HTML / JS
+
+---
+
+## 🏗️ Project Structure
+oct_api/
+├── app/                    # FastAPI application
+│   ├── main.py            # API entry point
+│   ├── config.py          # Configuration
+│   ├── schemas.py         # Data models
+│   ├── inference/         # Model inference
+│   │   ├── model.py
+│   │   └── preprocess.py
+│   └── static/            # Web UI
+├── llm/                   # LLM + monitoring
+│   ├── report.py          # Report generation
+│   └── monitoring/
+│       ├── metrics.py
+│       └── drift.py
+├── tests/                 # Test suite
+├── weights/               # Model weights
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+
+---
+
+## ⚡ Quick Start
+
+### 🔹 Local Setup
 
 ```bash
-# 1. Activate conda environment
 conda activate oct_api
-
-# 2. Navigate to project directory
 cd ~/teddy/oct_api
 
-# 3. Start API service
 OCT_WEIGHTS_PATH=weights/best_convnext_model_clean.pth \
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
+Access:
+- Web UI: http://localhost:8000  
+- API Docs: http://localhost:8000/docs  
+- Metrics: http://localhost:8000/metrics  
 
-After startup, access:
-
-- Web UI: http://localhost:8000
-- API Documentation: http://localhost:8000/docs (Swagger UI)
-- Metrics: http://localhost:8000/metrics (Prometheus)
-
-### Method 2: Docker Setup
+### 🔹 Docker Setup
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
-## Configuration
-```python
-# Model weights path (required)
-OCT_WEIGHTS_PATH=weights/best_convnext_model_clean.pth
-
-# Model architecture (optional, default: convnext_tiny)
-OCT_ARCH=convnext_tiny
-
-# Compute device (optional, default: cpu, options: cuda)
-OCT_DEVICE=cpu
-```
-
-## API Usage
-Image Classification
+## 📡 API Usage
 ```bash
 curl -X POST "http://localhost:8000/predict" \
-  -F "file=@/path/to/image.jpg"
+  -F "file=@image.jpg"
 ```
-Response Example:
-```json
+### Response
+```bash
 {
-  "prediction": "healthy",
-  "confidence": 0.95,
-  "timestamp": "2026-04-08T10:30:45Z"
+  "prediction": "DME",
+  "confidence": 0.987,
+  "report": "Generated medical summary..."
 }
 ```
 
-## Testing 
-Run All Tests
+## 🧪 Testing
 ```bash
-conda run -n oct_api python -m -pytest -q
+pytest -v
+```
+## 🔧 Configuration
+```bash
+OCT_WEIGHTS_PATH=weights/best_convnext_model_clean.pth
+OCT_ARCH=convnext_tiny
+OCT_DEVICE=cpu
 ```
 
-## Run Specific Tests
-```bash
-# Unit tests
-conda run -n oct_api python -m pytest tests/test_report.py -v
+## ⚠️ Troubleshooting
 
-# Integration tests
-conda run -n oct_api python -m pytest tests/test_integration.py -v
+| Issue | Solution |
+|------|--------|
+| Model not loading | Check `OCT_WEIGHTS_PATH` |
+| CUDA OOM | Use CPU or reduce batch size |
+| API not responding | Check port 8000 |
+| Slow inference | Enable GPU |
 
-# Drift detection tests
-conda run -n oct_api python -m pytest tests/test_drift.py -v
-```
-
-## Project Structure
-```bash
-oct_api/
-├── app/                    # FastAPI application
-│   ├── main.py            # Application entry point, API routes
-│   ├── config.py          # Configuration management
-│   ├── schemas.py         # Request/response data models
-│   ├── inference/         # Inference module
-│   │   ├── model.py      # Model loading and inference
-│   │   └── preprocess.py # Image preprocessing
-│   └── static/            # Frontend assets
-│       ├── index.html    # Web UI
-│       ├── script.js     # Interactive logic
-│       └── style.css     # Styling
-├── llm/                   # Report and monitoring module
-│   ├── report.py         # Report generation
-│   └── monitoring/       # Monitoring and drift detection
-│       ├── metrics.py   # Performance metrics collection
-│       └── drift.py     # Data drift detection
-├── scripts/              # Utility scripts
-│   └── generate_ref_stats.py  # Generate reference statistics
-├── tests/               # Test cases
-│   ├── conftest.py     # Pytest configuration
-│   ├── test_integration.py
-│   ├── test_drift.py
-│   └── test_report.py
-├── weights/             # Pre-trained model weights
-│   └── best_convnext_model_clean.pth
-├── requirements.txt     # Python dependencies
-├── docker-compose.yml  # Docker configuration
-├── Dockerfile          # Docker image definition
-└── README.md           # This file
-```
-
-## Dependency Installation
-If the conda env hasn't been created yet:
-```bash
-# Create new environment
-conda create -n oct_api python=3.10
-
-# Activate environment
-conda activate oct_api
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Install PyTorch (CPU version)
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-
-# Or install CUDA version (CUDA 11.8)
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
-```
-
-## Development
-
-Code Style
-Follow PEP 8 standards. Recommended tools: black and pylint.
-
-Run Development Server
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-## Troubleshooting
-| Issue                     | Solution                                                                 |
-|--------------------------|--------------------------------------------------------------------------|
-| Model weights not found  | Check `OCT_WEIGHTS_PATH` environment variable is set correctly          |
-| CUDA out of memory       | Set `OCT_DEVICE` to `cpu` or reduce batch size                          |
-| Slow inference           | Ensure GPU is used (if available), check system resources               |
-| API connection failed    | Verify service is running, check firewall and port 8000                 |
-
+## 📌 Highlights (For Recruiters)
+	•	Designed end-to-end ML system (not just model training)
+	•	Implemented LLM fallback mechanism for robustness
+	•	Integrated drift detection for real-world deployment safety
+	•	Built production-ready API with monitoring and Docker
