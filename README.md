@@ -78,7 +78,7 @@ This system is designed as a modular ML pipeline:
 ## 🏗️ Project Structure
 ```
 oct_api/
-├── app/                    # FastAPI application
+├── app/                   # FastAPI application
 │   ├── main.py            # API entry point
 │   ├── config.py          # Configuration
 │   ├── schemas.py         # Data models
