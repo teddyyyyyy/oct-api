@@ -154,7 +154,7 @@ OCT_DEVICE=cpu
 | API not responding | Check port 8000 |
 | Slow inference | Enable GPU |
 
-## 📌 Highlights (For Recruiters)
+## 📌 Highlights
 	•	Designed end-to-end ML system (not just model training)
 	•	Implemented LLM fallback mechanism for robustness
 	•	Integrated drift detection for real-world deployment safety
