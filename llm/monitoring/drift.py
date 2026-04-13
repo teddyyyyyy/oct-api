@@ -6,7 +6,7 @@ def img_stats(img: Image.Image):
     arr = np.asarray(img.convert("L"), dtype=np.float32) / 255.0
     mean = float(arr.mean())
     std = float(arr.std())
-    # 簡單銳利度 proxy：Laplacian variance
+    # Simple Sharpness proxy：Laplacian variance
     lap = np.abs(
         -4*arr
         + np.roll(arr, 1, 0) + np.roll(arr, -1, 0)
@@ -17,13 +17,13 @@ def img_stats(img: Image.Image):
 
 class DriftMonitor:
     def __init__(self, ref_stats_path: str):
-        # ref: 你用 training/val 的統計先算好存起來
+        # ref: use your training/val calculate and save the statistics first.
         try:
             ref = np.load(ref_stats_path)
             self.mu = ref["mu"]
             self.sigma = ref["sigma"]
         except Exception:
-            # 沒ref就先用預設（你之後再補）
+            # If there's no reference, use the preset for now (you can add it later).
             self.mu = np.array([0.5, 0.2, 0.01], dtype=np.float32)
             self.sigma = np.array([0.1, 0.1, 0.01], dtype=np.float32)
 
