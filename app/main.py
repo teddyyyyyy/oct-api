@@ -1,8 +1,8 @@
 import os
 import time
 from fastapi import FastAPI, UploadFile, File
-from fastapi.staticfiles import StaticFiles      # ← 添加這行
-from fastapi.responses import FileResponse       # ← 添加這行
+from fastapi.staticfiles import StaticFiles      
+from fastapi.responses import FileResponse       
 from loguru import logger
 
 from app.schemas import PredictResponse
@@ -25,11 +25,11 @@ REF_STATS_PATH = os.getenv("OCT_REF_STATS_PATH", "app/monitoring/ref_stats.npz")
 app = FastAPI(title="OCT AI Diagnosis API", version="0.1.0")
 setup_metrics(app)
 
-# ======== 在這裡添加以下代碼 ========
-# 掛載靜態文件
+
+# Mounting static files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-# 首頁路由
+# Homepage routing
 @app.get("/")
 def serve_index():
     return FileResponse("app/static/index.html")
