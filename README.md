@@ -54,13 +54,30 @@ This system is designed as a modular ML pipeline:
 
 ## 📊 Model Performance
 
-- Internal Validation (OCT2017):  
-  **AUROC > 0.99**
+The model was evaluated under both standard and leakage-controlled settings to ensure realistic performance estimation.
 
-- External Validation (Leakage-Controlled Dataset):  
-  **Macro-F1 ≈ 0.93**
+- **Internal Validation (OCT2017)**  
+  AUROC > 0.99 (leakage-prone benchmark)
 
-- Demonstrates realistic generalization under distribution shift
+- **Leakage-Controlled Evaluation (patient-level split)**  
+  Macro-F1 ≈ 0.93
+
+- **External Validation (LOCTv3)**  
+  Demonstrates improved generalization under distribution shift
+
+> This project emphasizes realistic evaluation by removing data leakage (duplicate images and patient overlap), which is often overlooked in public medical AI benchmarks.
+---
+## ⏱️ Performance Metrics
+
+Test environment: CPU, local FastAPI deployment, single-image inference
+
+| Metric | Value |
+|---|---:|
+| End-to-end Response Time | 0.86 s / image |
+| Model Inference Time | 0.08 s / image |
+| LLM Report Generation Time | 0.77 s / request |
+
+> Most latency comes from LLM-based report generation, while model inference remains lightweight.
 
 ---
 
@@ -128,9 +145,20 @@ curl -X POST "http://localhost:8000/predict" \
 ### Response
 ```bash
 {
-  "prediction": "DME",
-  "confidence": 0.987,
-  "report": "Generated medical summary..."
+  "label": "DME",
+  "probs": {
+    "CNV": 0.01,
+    "DME": 0.98,
+    "DRUSEN": 0.01,
+    "NORMAL": 0.00
+  },
+  "report": "OCT AI Preliminary Report...",
+  "report_source": "ollama",
+  "timing": {
+    "total_latency_seconds": 0.86,
+    "inference_seconds": 0.08,
+    "report_seconds": 0.77
+  }
 }
 ```
 

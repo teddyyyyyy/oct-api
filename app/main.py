@@ -102,27 +102,47 @@ def health_llm():
 
 @app.post("/predict", response_model=PredictResponse)
 async def predict(file: UploadFile = File(...)):
-    start = time.time()
+    t0 = time.perf_counter()
     REQUESTS.inc()
 
+    # 1. read file
     img_bytes = await file.read()
+    t1 = time.perf_counter()
 
+    # 2. model inference
     pred = app.state.classifier.predict(img_bytes)
     PRED_CLASS.labels(pred["label"]).inc()
+    t2 = time.perf_counter()
 
+    # 3. drift check
     drift_result = app.state.drift.check_and_update(img_bytes)
+    t3 = time.perf_counter()
 
+    # 4. report generation
     report, report_source = generate_report_with_fallback(
         pred["label"],
         pred["probs"],
         drift_result,
     )
+    t4 = time.perf_counter()
 
-    latency = time.time() - start
-    LATENCY.observe(latency)
+    # total latency
+    total_latency = t4 - t0
+    file_read_time = t1 - t0
+    inference_time = t2 - t1
+    drift_time = t3 - t2
+    report_time = t4 - t3
+
+    LATENCY.observe(total_latency)
 
     logger.info(
-        f"predict label={pred['label']} latency={latency:.3f}s drift={drift_result.get('alert')}"
+        f"predict label={pred['label']} "
+        f"total={total_latency:.3f}s "
+        f"read={file_read_time:.3f}s "
+        f"infer={inference_time:.3f}s "
+        f"drift={drift_time:.3f}s "
+        f"report={report_time:.3f}s "
+        f"drift_alert={drift_result.get('alert')}"
     )
 
     return {
@@ -133,4 +153,11 @@ async def predict(file: UploadFile = File(...)):
         "drift": drift_result,
         "ollama_version": OLLAMA_VERSION,
         "ollama_model": os.getenv("OLLAMA_MODEL", "llama3"),
+        "timing": {
+            "total_latency_seconds": round(total_latency, 4),
+            "file_read_seconds": round(file_read_time, 4),
+            "inference_seconds": round(inference_time, 4),
+            "drift_seconds": round(drift_time, 4),
+            "report_seconds": round(report_time, 4),
+        },
     }

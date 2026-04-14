@@ -77,7 +77,13 @@ uploadBtn.addEventListener('click', async () => {
         }
         
         const data = await response.json();
-        
+
+        document.getElementById("latency").textContent =
+            data.timing?.total_latency_seconds ?? "-";
+        document.getElementById("inferTime").textContent =
+            data.timing?.inference_seconds ?? "-";
+        document.getElementById("reportTime").textContent =
+            data.timing?.report_seconds ?? "-";
         // show results
         displayResults(data);
         
@@ -114,7 +120,7 @@ function displayResults(data) {
     // Data drift
     if (data.drift && data.drift.alert) {
         document.getElementById('driftBox').style.display = 'block';
-        document.getElementById('driftAlert').textContent = `${data.drift.alert} (分數: ${data.drift.score?.toFixed(2) || 'N/A'})`;
+        document.getElementById('driftAlert').textContent = `${data.drift.alert} (score: ${data.drift.score?.toFixed(2) || 'N/A'})`;
     } else {
         document.getElementById('driftBox').style.display = 'none';
     }
@@ -125,6 +131,6 @@ function displayResults(data) {
 }
 
 function showError(message) {
-    errorText.textContent = `錯誤: ${message}`;
+    errorText.textContent = `error: ${message}`;
     errorBox.style.display = 'block';
 }
