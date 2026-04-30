@@ -187,3 +187,7 @@ OCT_DEVICE=cpu
 	•	Implemented LLM fallback mechanism for robustness
 	•	Integrated drift detection for real-world deployment safety
 	•	Built production-ready API with monitoring and Docker
+
+
+## Read more 
+There's more info about the oct classification, check it out: https://medium.com/@tzu850606/why-99-accuracy-is-misleading-using-oct-classification-as-an-example-38422a44d170
